@@ -18,7 +18,11 @@ def run(task_service: TaskService) -> None:
     print("Welcome to taskio!")
     while True:
         print_menu()
-        user_option = int(input("Enter your option: "))
+        try:
+            user_option = int(input("Enter your option: "))
+        except ValueError:
+            print("Invalid option. Please enter a number from 1 to 4.")
+            continue
         try:
             match user_option:
                 case 1:
@@ -26,12 +30,16 @@ def run(task_service: TaskService) -> None:
                     task_service.add_task(task_title)
                 case 2:
                     print("*" * 15)
-                    task_service.list_tasks()
+                    tasks = task_service.list_tasks()
+                    if len(tasks) == 0:
+                        print("No tasks yet!")
+                        return
+                    print("\n\n".join(str(task) for task in tasks))
                     print("*" * 15)
                 case 3:
                     try:
                         task_id = int(input("Enter task id: "))
-                    except:
+                    except ValueError:
                         print()        
                         print("Invalid task id. Please enter a number.")
                         continue

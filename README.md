@@ -30,7 +30,7 @@ uv tool install .
 After installation, run:
 `taskio`
 
-To reinstall after local changes:
+**Important**: reinstall after local changes:
 
 `uv tool install . --reinstall`
 

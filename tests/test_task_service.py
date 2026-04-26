@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from app.errors import TaskEmptyTitleError, TaskNotFoundError
+from app.models import TaskStatus
 from app.task_repository import InMemoryRepository, JsonTaskRepository
 from app.task_service import TaskService, Task
 
@@ -20,7 +21,7 @@ def test_create_task_with_default_status():
 # add task
 def test_add_task():
     task_service = setup_test_service()
-    expected_task = Task(1, "Learn python", "in-progress")
+    expected_task = Task(1, "Learn python", TaskStatus.IN_PROGRESS)
     assert task_service.add_task("Learn python") == [expected_task]
     
 def test_add_task_with_empty_title():
@@ -35,7 +36,7 @@ def test_complete_task():
     task_service.add_task("Learn code")
     
     test_task = task_service.complete_task(1)
-    expected_task = Task(1, "Learn python", "completed")
+    expected_task = Task(1, "Learn python", TaskStatus.COMPLETED)
     
     assert test_task == expected_task
 
@@ -51,8 +52,8 @@ def test_complete_task_with_incorrect_id():
 def test_save_and_load_tasks_in_memory(tmp_path: Path):
     
     tasks = [
-        Task(1, "Learn python", "in-progress"),
-        Task(2, "Learn code", "in-progress")
+        Task(1, "Learn python", TaskStatus.IN_PROGRESS),
+        Task(2, "Learn code", TaskStatus.IN_PROGRESS)
     ]
         
     repo = InMemoryRepository()
@@ -65,8 +66,8 @@ def test_save_and_load_tasks_json(tmp_path: Path):
     path = tmp_path / "tasks.json"
     
     tasks = [
-        Task(1, "Learn python", "in-progress"),
-        Task(2, "Learn code", "in-progress")
+        Task(1, "Learn python", TaskStatus.IN_PROGRESS),
+        Task(2, "Learn code", TaskStatus.IN_PROGRESS)
     ]
         
     repo = JsonTaskRepository(str(path))

@@ -1,11 +1,16 @@
 from dataclasses import asdict, dataclass
+from enum import StrEnum
 from typing import Any
+
+class TaskStatus(StrEnum):
+    IN_PROGRESS = "in-progress"
+    COMPLETED = "completed"
 
 @dataclass
 class Task:
     id: int
     title: str
-    status: str = "in-progress"
+    status: TaskStatus = TaskStatus.IN_PROGRESS
     
     def to_dict(self) -> dict:
         return asdict(self)
