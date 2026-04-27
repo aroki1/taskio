@@ -48,6 +48,51 @@ def test_complete_task_with_incorrect_id():
     with pytest.raises(TaskNotFoundError):
         task_service.complete_task(100000)
 
+# update task title
+def test_update_task_title():
+    task_service = setup_test_service()
+    task_service.add_task("Learn python")
+    task_service.add_task("Learn code")
+
+    updated_task = task_service.update_task_title(1, "Learn pytest")
+    expected_task = Task(1, "Learn pytest", TaskStatus.IN_PROGRESS)
+
+    assert updated_task == expected_task
+    assert task_service.list_tasks()[0] == expected_task
+
+def test_update_task_title_with_incorrect_id():
+    task_service = setup_test_service()
+    task_service.add_task("Learn python")
+
+    with pytest.raises(TaskNotFoundError):
+        task_service.update_task_title(100000, "Learn pytest")
+
+def test_update_task_title_with_empty_title():
+    task_service = setup_test_service()
+    task_service.add_task("Learn python")
+
+    with pytest.raises(TaskEmptyTitleError):
+        task_service.update_task_title(1, "")
+
+# delete task
+def test_delete_task():
+    task_service = setup_test_service()
+    task_service.add_task("Learn python")
+    task_service.add_task("Learn code")
+
+    deleted_task = task_service.delete_task(1)
+    expected_task = Task(1, "Learn python", TaskStatus.IN_PROGRESS)
+
+    assert deleted_task == expected_task
+    assert task_service.list_tasks() == [Task(2, "Learn code", TaskStatus.IN_PROGRESS)]
+
+def test_delete_task_with_incorrect_id():
+    task_service = setup_test_service()
+    task_service.add_task("Learn python")
+
+    with pytest.raises(TaskNotFoundError):
+        task_service.delete_task(100000)
+
 # save and load tasks
 def test_save_and_load_tasks_in_memory(tmp_path: Path):
     
